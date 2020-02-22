@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import TodoList from './TodoList';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Grid from '@material-ui/core/Grid';
 
-function App() {
+function TodoApp () {
+  const initialTodos = [
+    { id: 1, task: 'Clean windows', completed: false },
+    { id: 2, task: 'Wash car', completed: false },
+    { id: 3, task: 'Get milk', completed: true }
+  ];
+
+  const [todos, setTodos] = useState(initialTodos);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Paper
+      style={{
+        padding: 0,
+        margin: 0,
+        height: '100vh',
+        backgroundColor: '#fafafa'
+      }}
+      elevation={0}
+    >
+      <AppBar color='primary' position='static' style={{ height: '64px' }}>
+        <Toolbar>
+          <Typography color='inherit'>Todos with hooks</Typography>
+        </Toolbar>
+      </AppBar>
+      <TodoList todos={todos} />
+    </Paper>
   );
 }
 
-export default App;
+export default TodoApp;
