@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TodoList from './Components/TodoList';
 import TodoForm from './Components/TodoForm';
 import Typography from '@material-ui/core/Typography';
@@ -9,13 +9,19 @@ import Grid from '@material-ui/core/Grid';
 import uuid from 'uuid';
 
 function TodoApp () {
-  const initialTodos = [
-    { id: 1, task: 'Clean windows', completed: false },
-    { id: 2, task: 'Wash car', completed: false },
-    { id: 3, task: 'Get milk', completed: true }
-  ];
+  const initialTodos = JSON.parse(window.localStorage.getItem('todos') || "[]")
+  // const initialTodos = [
+  //   { id: 1, task: 'Clean windows', completed: false },
+  //   { id: 2, task: 'Wash car', completed: false },
+  //   { id: 3, task: 'Get milk', completed: true }
+  // ];
 
   const [todos, setTodos] = useState(initialTodos);
+
+  useEffect(() => {
+    window.localStorage.setItem("todos", JSON.stringify(todos))
+  })
+
   const addTodo = newTodoText => {
     setTodos([...todos, { id: uuid(), task: newTodoText, completed: false }]);
   };
@@ -24,11 +30,17 @@ function TodoApp () {
     setTodos(updatedTodos);
   };
   const toggleTodo = todoId => {
-    const updatedTodos = todos.map(todo => 
-        todo.id === todoId ? {...todo, completed: !todo.completed} : todo
-      );
-    setTodos(updatedTodos)
-  }
+    const updatedTodos = todos.map(todo =>
+      todo.id === todoId ? { ...todo, completed: !todo.completed } : todo
+    );
+    setTodos(updatedTodos);
+  };
+  const editTodo = (todoId, newTask) => {
+    const updatedTodos = todos.map(todo =>
+      todo.id === todoId ? { ...todo, task: newTask } : todo
+    );
+    setTodos(updatedTodos);
+  };
 
   return (
     <Paper
@@ -48,10 +60,11 @@ function TodoApp () {
       <Grid container justify='center' style={{ marginTop: '1rem' }}>
         <Grid item xs={11} md={8} lg={4}>
           <TodoForm addTodo={addTodo} />
-          <TodoList 
-            todos={todos} 
-            removeTodo={removeTodo} 
+          <TodoList
+            todos={todos}
+            removeTodo={removeTodo}
             toggleTodo={toggleTodo}
+            editTodo={editTodo}
           />
         </Grid>
       </Grid>
